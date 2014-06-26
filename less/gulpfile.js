@@ -35,4 +35,7 @@ gulp.task('prod', function()
 });
 
 
-gulp.run('develop');
+gulp.task('default', function() {
+    gulp.run('develop');
+});
+
