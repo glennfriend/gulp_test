@@ -1,8 +1,9 @@
-var gulp = require('gulp');
-var uglify = require('gulp-uglify'),
-    rename = require('gulp-rename'),
-    concat = require('gulp-concat'),
-    minifycss = require('gulp-minify-css');
+var gulp        = require('gulp');
+var uglify      = require('gulp-uglify'),
+    rename      = require('gulp-rename'),
+    concat      = require('gulp-concat'),
+    minifycss   = require('gulp-minify-css'),
+    clean       = require('gulp-clean');
 
 // 合併, 壓縮, 命名
 gulp.task('js-min', function() {
@@ -17,9 +18,9 @@ gulp.task('js-min', function() {
 // 合併, 壓縮, 命名
 gulp.task('css-min',['build-less'], function() {
     gulp.src([
-         './rc/css/*.css',
-        '!./rc/css/_developer.css']
-        )
+            './rc/css/*.css',
+            '!./rc/css/_developer.css'
+        ])
         .pipe(concat('all.css'))
         .pipe(gulp.dest('./media/'))
         .pipe(rename({ suffix: '.min' }))
@@ -28,9 +29,20 @@ gulp.task('css-min',['build-less'], function() {
 });
 
 // less
-gulp.task('build-less', function() {
+gulp.task('build-less', function()
+{
     // less to css
 });
+
+// clean all files
+gulp.task('clean', function()
+{
+    return gulp.src([
+        './media/*.css','./media/*.js'
+        ], {read: false} )
+        .pipe(clean({force: true}));
+});
+
 
 /* --------------------------------------------------------------------------------
     
@@ -51,7 +63,7 @@ gulp.task('prod', function()
 });
 
 
-gulp.task('default', function() {
+gulp.task('default', ['clean'], function() {
     gulp.run('develop');
 });
 
