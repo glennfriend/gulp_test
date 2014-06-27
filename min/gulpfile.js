@@ -1,8 +1,12 @@
 var gulp        = require('gulp');
-var uglify      = require('gulp-uglify'),
-    rename      = require('gulp-rename'),
+var rename      = require('gulp-rename'),
     concat      = require('gulp-concat'),
+    clean       = require('gulp-clean');
+
+var uglify      = require('gulp-uglify'),
     minifycss   = require('gulp-minify-css'),
+    imagemin    = require('gulp-imagemin'),
+    pngcrush    = require('imagemin-pngcrush'),
     clean       = require('gulp-clean');
 
 // 合併, 壓縮, 命名
@@ -34,11 +38,26 @@ gulp.task('build-less', function()
     // less to css
 });
 
+// 重新壓縮
+gulp.task('image-min', function() {
+    gulp.src('./rc/album/*')
+        .pipe(imagemin({
+            progressive: true,
+            svgoPlugins: [{removeViewBox: false}],
+            use: [pngcrush()]
+        }))
+        .pipe(gulp.dest('./media'));
+});
+
 // clean all files
 gulp.task('clean', function()
 {
     return gulp.src([
-        './media/*.css','./media/*.js'
+            './media/*.css',
+            './media/*.js',
+            './media/*.jpg',
+            './media/*.jpeg',
+            './media/*.png',
         ], {read: false} )
         .pipe(clean({force: true}));
 });
@@ -52,7 +71,7 @@ gulp.task('clean', function()
 gulp.task('develop', function()
 {
     console.log( 'dirname = ' + __dirname );
-    gulp.run('js-min','css-min');
+    gulp.run('js-min','css-min','image-min');
 });
  
 
