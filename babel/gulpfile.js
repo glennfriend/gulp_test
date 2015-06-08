@@ -1,6 +1,7 @@
 var gulp        = require("gulp"),
     connect     = require('gulp-connect'),
     sourcemaps  = require("gulp-sourcemaps"),
+    notify      = require('gulp-notify'),
     babel       = require("gulp-babel"),
     concat      = require('gulp-concat');
 
@@ -31,6 +32,11 @@ gulp.task('compile', function () {
     return gulp.src( public_path + "/dist/core.src/*.js")
         .pipe(sourcemaps.init())
         .pipe(babel())
+        // .on('error', console.error.bind(console))   // TODO: 防止錯誤中斷 node, 但是 compile 功能在發生錯誤之後就會失消, 該問題未獲得解決
+        .on('error', notify.onError({
+            title: 'babel to ES5:',
+            message: 'Failed'
+        }))
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest( public_path + "/dist/core"));
 });
